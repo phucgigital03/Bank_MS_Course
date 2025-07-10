@@ -1,0 +1,47 @@
+# Ignore all .env files in the project
+.env
+**/.env
+.env-dev
+**/.env-dev
+
+# Ignore logs
+logs
+**/logs
+
+# Ignore all docker-compose files in the project
+docker-compose
+
+# Maven build artifacts
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Spring Tool Suite (STS) specific files
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA specific files
+.idea
+*.iws
+*.iml
+*.ipr
+
+# NetBeans specific files
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# VS Code specific files
+.vscode/
