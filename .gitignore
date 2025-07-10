@@ -9,7 +9,7 @@ logs
 **/logs
 
 # Ignore all docker-compose files in the project
-docker-compose
+#docker-compose
 
 # Maven build artifacts
 HELP.md
