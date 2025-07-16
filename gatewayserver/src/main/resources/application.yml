@@ -9,7 +9,7 @@ spring:
         webflux:
           discovery:
             locator:
-              enabled: true
+              enabled: false
               lower-case-service-id: true
 
 management:
@@ -30,9 +30,8 @@ info:
     description: "Bank Gateway Server Application"
     version: "1.0.0"
 
-#logging:
-#  level:
-#    com:
-#      phuc:
-#        gatewayserver: DEBUG
-
+logging:
+  level:
+    com:
+      phuc:
+        gatewayserver: DEBUG

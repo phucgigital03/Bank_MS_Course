@@ -15,7 +15,6 @@ import com.phuc.accounts.service.CustomersService;
 import com.phuc.accounts.service.client.CardsFeignClient;
 import com.phuc.accounts.service.client.LoansFeignClient;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +28,7 @@ public class CustomersServiceImpl implements CustomersService {
     private LoansFeignClient loansFeignClient;
 
     @Override
-    public CustomerDetailsDto fetchCustomerDetails(String mobileNumber) {
+    public CustomerDetailsDto fetchCustomerDetails(String mobileNumber, String correlationId) {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("customer","mobileNumber", mobileNumber));
 
@@ -40,10 +39,10 @@ public class CustomersServiceImpl implements CustomersService {
         customerDetailsDto.setAccountsDto(AccountMapper.mapToAccountDto(account, new AccountDto()));
 
         // Fetch cards and loans details using Feign clients
-        ResponseEntity<LoansDto> loansResponseEntity = loansFeignClient.fetchLoanDetails(mobileNumber);
+        ResponseEntity<LoansDto> loansResponseEntity = loansFeignClient.fetchLoanDetails(correlationId,mobileNumber);
         customerDetailsDto.setLoansDto(loansResponseEntity.getBody());
 
-        ResponseEntity<CardsDto> cardsResponseEntity = cardsFeignClient.fetchCardDetails(mobileNumber);
+        ResponseEntity<CardsDto> cardsResponseEntity = cardsFeignClient.fetchCardDetails(correlationId,mobileNumber);
         customerDetailsDto.setCardsDto(cardsResponseEntity.getBody());
 
         return customerDetailsDto;
