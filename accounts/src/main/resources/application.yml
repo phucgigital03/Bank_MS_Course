@@ -22,6 +22,10 @@ spring:
     show-sql: true
   config:
     import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
 #  rabbitmq:
 #    host: "localhost"
 #    port: 5672
@@ -62,9 +66,17 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8070/eureka/
 
-
 logging:
   level:
     com:
       phuc:
         accounts: DEBUG
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50
+      waitDurationInOpenState: 10000
+

@@ -40,10 +40,14 @@ public class CustomersServiceImpl implements CustomersService {
 
         // Fetch cards and loans details using Feign clients
         ResponseEntity<LoansDto> loansResponseEntity = loansFeignClient.fetchLoanDetails(correlationId,mobileNumber);
-        customerDetailsDto.setLoansDto(loansResponseEntity.getBody());
+        if(loansResponseEntity != null){
+            customerDetailsDto.setLoansDto(loansResponseEntity.getBody());
+        }
 
         ResponseEntity<CardsDto> cardsResponseEntity = cardsFeignClient.fetchCardDetails(correlationId,mobileNumber);
-        customerDetailsDto.setCardsDto(cardsResponseEntity.getBody());
+        if(cardsResponseEntity != null){
+            customerDetailsDto.setCardsDto(cardsResponseEntity.getBody());
+        }
 
         return customerDetailsDto;
     }
