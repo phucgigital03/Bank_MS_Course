@@ -2,6 +2,7 @@ package com.phuc.accounts.service.impl;
 
 import com.phuc.accounts.constant.AccountConstant;
 import com.phuc.accounts.dto.AccountDto;
+import com.phuc.accounts.dto.AccountsMsgDto;
 import com.phuc.accounts.dto.CustomerDto;
 import com.phuc.accounts.entity.Account;
 import com.phuc.accounts.entity.Customer;
@@ -13,6 +14,9 @@ import com.phuc.accounts.repository.AccountRepository;
 import com.phuc.accounts.repository.CustomerRepository;
 import com.phuc.accounts.service.AccountService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,12 +25,16 @@ import java.util.Random;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+    private static final Logger log = LoggerFactory.getLogger(AccountServiceImpl.class);
+
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
+    private final StreamBridge streamBridge;
 
-    public AccountServiceImpl(AccountRepository accountRepository, CustomerRepository customerRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, CustomerRepository customerRepository, StreamBridge streamBridge) {
         this.accountRepository = accountRepository;
         this.customerRepository = customerRepository;
+        this.streamBridge = streamBridge;
     }
 
 
@@ -40,7 +48,16 @@ public class AccountServiceImpl implements AccountService {
 //        customer.setCreatedAt(LocalDateTime.now());
 //        customer.setCreatedBy("anonymous");
         Customer savedCustomer = customerRepository.save(customer);
-        accountRepository.save(createNewAccount(savedCustomer));
+        Account savedAccount = accountRepository.save(createNewAccount(savedCustomer));
+        sendCommunication(savedAccount, savedCustomer);
+    }
+
+    private void sendCommunication(Account account, Customer customer) {
+        var accountsMsgDto = new AccountsMsgDto(account.getAccountNumber(), customer.getName(),
+                customer.getEmail(), customer.getMobileNumber());
+        log.info("Sending Communication request for the details: {}", accountsMsgDto);
+        var result = streamBridge.send("sendCommunication-out-0", accountsMsgDto);
+        log.info("Is the Communication request successfully triggered ? : {}", result);
     }
 
     @Override
@@ -86,6 +103,20 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.deleteByCustomerId(customer.getCustomerId());
         customerRepository.deleteById(customer.getCustomerId());
         return true;
+    }
+
+    @Override
+    public boolean updateCommunicationStatus(Long accountNumber) {
+        boolean isUpdated = false;
+        if(accountNumber !=null ){
+            Account accounts = accountRepository.findById(accountNumber).orElseThrow(
+                    () -> new ResourceNotFoundException("Account", "AccountNumber", accountNumber.toString())
+            );
+            accounts.setCommunicationSw(true);
+            accountRepository.save(accounts);
+            isUpdated = true;
+        }
+        return  isUpdated;
     }
 
     //    @Transactional
