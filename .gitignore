@@ -48,3 +48,9 @@ build/
 
 # logging data
 docker-compose/default/.data
+helm/grafana
+helm/grafana-loki
+helm/grafana-tempo
+helm/kafka
+helm/keycloak
+helm/kube-prometheus
