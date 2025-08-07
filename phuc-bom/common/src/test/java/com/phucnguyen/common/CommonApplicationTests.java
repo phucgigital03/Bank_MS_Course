@@ -1,13 +1,13 @@
-package com.phucnguyen.phucbom;
+package com.phucnguyen.common;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PhucBomApplicationTests {
+class CommonApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+	}
 
 }
