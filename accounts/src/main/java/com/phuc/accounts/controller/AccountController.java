@@ -3,9 +3,10 @@ package com.phuc.accounts.controller;
 import com.phuc.accounts.constant.AccountConstant;
 import com.phuc.accounts.dto.AccountsContactInfoDto;
 import com.phuc.accounts.dto.CustomerDto;
-import com.phuc.accounts.dto.ErrorResponseDto;
+//import com.phuc.accounts.dto.ErrorResponseDto;
 import com.phuc.accounts.dto.ResponseDto;
 import com.phuc.accounts.service.AccountService;
+import com.phucnguyen.common.dto.ErrorResponseDto;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
@@ -141,7 +142,7 @@ public class AccountController {
             )
     })
     @GetMapping("/fetch")
-    public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam
+    public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam("mobileNumber")
                                                            @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
                                                            String mobileNumber) {
         CustomerDto customerDto = accountService.fetchAccount(mobileNumber);

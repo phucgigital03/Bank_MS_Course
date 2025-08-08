@@ -1,6 +1,7 @@
 package com.phuc.accounts.exception;
 
-import com.phuc.accounts.dto.ErrorResponseDto;
+//import com.phuc.accounts.dto.ErrorResponseDto;
+import com.phucnguyen.common.dto.ErrorResponseDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

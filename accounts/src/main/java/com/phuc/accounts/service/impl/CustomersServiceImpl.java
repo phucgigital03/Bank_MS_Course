@@ -39,7 +39,9 @@ public class CustomersServiceImpl implements CustomersService {
         customerDetailsDto.setAccountsDto(AccountMapper.mapToAccountDto(account, new AccountDto()));
 
         // Fetch cards and loans details using Feign clients
+        System.out.println("mobileNumber = " + mobileNumber);
         ResponseEntity<LoansDto> loansResponseEntity = loansFeignClient.fetchLoanDetails(correlationId,mobileNumber);
+        System.out.println("mobileNumber = " + mobileNumber);
         if(loansResponseEntity != null){
             customerDetailsDto.setLoansDto(loansResponseEntity.getBody());
         }
